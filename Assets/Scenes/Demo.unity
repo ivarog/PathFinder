@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 0
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,8 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 5ef7bfddd7eafae48bbc3dd6a5d9479b,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -157,7 +158,7 @@ MonoBehaviour:
   startY: 3
   goalX: 39
   goalY: 1
-  timeStep: 0.1
+  timeStep: 0.03
 --- !u!4 &551199532
 Transform:
   m_ObjectHideFlags: 0
@@ -381,6 +382,12 @@ MonoBehaviour:
   frontierColor: {r: 1, g: 0, b: 1, a: 1}
   exploredColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   pathColor: {r: 0, g: 1, b: 1, a: 1}
+  arrowColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
+  highlightColor: {r: 1, g: 1, b: 0.5, a: 1}
+  showIterations: 1
+  showColors: 1
+  showArrows: 1
+  exitOnGoal: 1
   isComplete: 0
 --- !u!4 &1401374296
 Transform:

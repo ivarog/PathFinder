@@ -16,14 +16,14 @@ public class Graph : MonoBehaviour
 
     public static readonly Vector2[] allDirections =
     {
-        new Vector2(0f, 1f),
-        new Vector2(1f, 1f),
-        new Vector2(1f, 0f),
-        new Vector2(1f, -1f),
-        new Vector2(0f, -1f),
-        new Vector2(-1f, -1f),
-        new Vector2(-1f, 0f),
-        new Vector2(-1f, 1f)
+        new Vector2(0f,1f),
+        new Vector2(1f,1f),
+        new Vector2(1f,0f),
+        new Vector2(1f,-1f),
+        new Vector2(0f,-1f),
+        new Vector2(-1f,-1f),
+        new Vector2(-1f,0f),
+        new Vector2(-1f,1f)
     };
 
     public void Init(int[,] mapData)
@@ -57,6 +57,14 @@ public class Graph : MonoBehaviour
                     walls.Add(newNode);
                 }
 
+                
+            }
+        }
+
+        for (int y = 0; y < m_height; y++)
+        {
+            for (int x = 0; x < m_width; x++)
+            {
                 //Si no es pared calculamos sus vecinos
                 if(nodes[x,y].nodeType != NodeType.Blocked)
                 {

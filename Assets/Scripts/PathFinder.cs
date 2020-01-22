@@ -19,6 +19,13 @@ public class PathFinder : MonoBehaviour
     public Color frontierColor = Color.magenta;
     public Color exploredColor = Color.gray;
     public Color pathColor = Color.cyan;
+    public Color arrowColor = new Color(0.85f, 0.85f, 0.85f, 1f);
+    public Color highlightColor = new Color(1f, 1f, 0.5f, 1f);
+
+    public bool showIterations = true;
+    public bool showColors = true;
+    public bool showArrows = true;
+    public bool exitOnGoal = true;
 
     public bool isComplete = false;
     int m_iterations = 0;
@@ -64,7 +71,7 @@ public class PathFinder : MonoBehaviour
     }
 
     //Colorea nodos clave
-    private void ShowColors(GraphView graphView, Node start, Node goal  )
+    private void ShowColors(GraphView graphView, Node start, Node goal)
     {
 
         if(graphView == null || start == null || goal == null)
@@ -82,6 +89,11 @@ public class PathFinder : MonoBehaviour
             graphView.ColorNodes(m_exploredNodes, exploredColor);
         }
 
+        if(m_pathNodes != null && m_pathNodes.Count > 0)
+        {
+            graphView.ColorNodes(m_pathNodes, pathColor);
+        }
+
         NodeView startNodeView = graphView.nodeViews[start.xIndex, start.yIndex];
 
         if(startNodeView != null)
@@ -97,13 +109,15 @@ public class PathFinder : MonoBehaviour
         }
     }
 
-    void ShowColors()
+    private void ShowColors()
     {
         ShowColors(m_graphView, m_startNode, m_goalNode);
     }
 
     public IEnumerator SearchRoutine(float timeStep = 0.1f)
-    {
+    {   
+        float timeStart = Time.time;
+
         yield return null;
 
         while(!isComplete)
@@ -120,8 +134,21 @@ public class PathFinder : MonoBehaviour
 
                 //Maneja la frontera
                 ExpandFrontier(currentNode);
-                //Colorea los bloques de nuevo
-                ShowColors();
+
+                if(m_frontierNodes.Contains(m_goalNode))
+                {
+                    m_pathNodes = GetPathNodes(m_goalNode);
+
+                    if(exitOnGoal)
+                    {
+                        isComplete = true;
+                    }
+                }
+
+                if(showIterations)
+                {
+                    ShowDiagnostics();
+                }
 
                 yield return new WaitForSeconds(timeStep);
             }
@@ -130,8 +157,30 @@ public class PathFinder : MonoBehaviour
                 isComplete = true;
             }
         }
+        ShowDiagnostics();
+        Debug.Log("PATHFINDER SearchRoutine: elapsed time = " + (Time.time - timeStart).ToString() + " seconds");
     }
 
+    private void ShowDiagnostics()
+    {
+        if(showColors)
+        {
+            //Colorea los bloques de nuevo
+            ShowColors();
+        }
+
+        if(m_graphView && showArrows)
+        {
+            m_graphView.ShowNodeArrows(m_frontierNodes.ToList(), arrowColor);
+
+            if(m_frontierNodes.Contains(m_goalNode))
+            {
+                m_graphView.ShowNodeArrows(m_pathNodes, highlightColor);
+            }
+        }
+    }
+
+    //Agrega la frontera los nodos
     void ExpandFrontier(Node node)
     {
         if(node != null)
@@ -148,5 +197,29 @@ public class PathFinder : MonoBehaviour
                 }
             }
         }
+    }
+
+    List<Node> GetPathNodes(Node endNode)
+    {
+        List<Node> path = new List<Node>();
+        //Regreso la lista vacia
+        if(endNode == null)
+        {
+            return path;
+        }
+        //Agrego el último nodo como inicio del camino
+        path.Add(endNode);
+
+        //El nodo actual es el previo del final
+        Node currentNode = endNode.previous;
+
+        //Se repite el mismo proceso hasta llegar al inicio
+        while(currentNode != null)
+        {
+            path.Insert(0, currentNode);
+            currentNode = currentNode.previous;
+        }
+
+        return path;
     }
 }
